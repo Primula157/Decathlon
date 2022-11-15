@@ -8,7 +8,7 @@ public class EventFactory {
         Event event = null;
 
         switch (name) {
-            case "100m":
+            case "100 m":
             case "400 m":
             case "110 m hurdles":
             case "1500 m":

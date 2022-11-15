@@ -2,9 +2,15 @@ package com.event;
 
 public abstract class Event {
     private String name;
+    private PointSystem pointSystem = new PointSystem();
+
+    public double[] getPointSystemParams(){
+        return pointSystem.getParams();
+    }
 
     public Event(String name) {
         this.name = name;
+        pointSystem.initialize();
     }
 
     public String getName() {
@@ -50,6 +56,18 @@ public abstract class Event {
                     params = new double[]{10.14, 7, 1.08};
                     break;
             }
+        }
+
+        public double calculatePoints(Event event){
+            double result = 0;
+            double A = params[0];
+            double B = params[1];
+            double C = params[2];
+
+            if(event instanceof FieldEvent) {
+                result = A;
+            }
+            return 0;
         }
 
         public double[] getParams(){

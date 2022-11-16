@@ -1,7 +1,7 @@
 package com.event;
 
 public class FieldEvent extends Event {
-    public FieldEvent(String name){
-        super(name);
+    public FieldEvent(int id, String name){
+        super(id, name);
     }
 }

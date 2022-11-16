@@ -8,35 +8,42 @@ import com.event.TrackEvent;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Main {
     public static void main(String[] args){
-        Map<Athlete, Map<Event, Double>> hashMap = getCompetitionResults( "E:\\Java\\results.csv");
-        for(Map.Entry<Athlete, Map<Event, Double>> line : hashMap.entrySet()) {
-            System.out.println(line.getKey().getName());
-            for(Map.Entry<Event, Double> results : line.getValue().entrySet()) {
-                System.out.println(results.getKey().getName() + " " + results.getValue());
+        Map<Athlete, Double[]> competitionResults = getCompetitionResults( "E:\\Java\\results.csv");
+        for(Map.Entry<Athlete, Double[]> line : competitionResults.entrySet()) {
+            System.out.print(line.getKey().getName() + " - ");
+            for (int i = 0; i < line.getValue().length; i++) {
+                System.out.printf("%f ", line.getValue()[i]);
             }
+            System.out.println();
         }
     }
 
-    public static Map<Athlete, Map<Event, Double>> getCompetitionResults(String path){
-        String competitionResults = readFile(path);
-        String[] lines = competitionResults.split("\n");
-        Map<Event, Double> map = new HashMap<>();
-        Map<Athlete, Map<Event, Double>> result = new HashMap<>();
-        List<Event> events = Decathlon.createEventsList();
+    public static Map<Athlete, Double[]> getCompetitionResults(String path){
+        String allCompetitionResultsFromFile = readFile(path);
+        String[] competitionResultsLineByLine = allCompetitionResultsFromFile.split("\n");
+        Map<Athlete, Double[]> competitionResults = new HashMap<>();
 
-        for (int i = 0; i < lines.length - 1; i++) {
-            String[] line = lines[i].split(";");
-            Athlete athlete = new Athlete(line[0]);
-            for (int j = 1; j < line.length - 1; j++) {
-                map.put(events.get(j-1), Double.valueOf(line[j]));
+        for (int i = 0; i < competitionResultsLineByLine.length; i++) {
+            String[] line = competitionResultsLineByLine[i].split(";");
+            String athleteName = line[0];
+            Athlete athlete = new Athlete(athleteName);
+            Double[] allPerformancesByAthlete = new Double[line.length - 1];
+            for (int j = 1; j < line.length; j++) {
+                if (j == line.length - 1) {
+                    LocalTime time = LocalTime.parse(line[j].trim(), DateTimeFormatter.ISO_LOCAL_TIME);
+                } else
+                allPerformancesByAthlete[j - 1] = Double.valueOf(line[j]);
             }
-            result.put(athlete, map);
+            competitionResults.put(athlete, allPerformancesByAthlete);
         }
-        return result;
+        return competitionResults;
     }
 
     public static String readFile(String path){

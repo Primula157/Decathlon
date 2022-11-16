@@ -1,14 +1,16 @@
 package com.event;
 
-public abstract class Event {
+ public abstract class Event {
     private String name;
     private PointSystem pointSystem = new PointSystem();
+    private final int id;
 
     public double[] getPointSystemParams(){
         return pointSystem.getParams();
     }
 
-    public Event(String name) {
+    public Event(int id, String name) {
+        this.id = id;
         this.name = name;
         pointSystem.initialize();
     }

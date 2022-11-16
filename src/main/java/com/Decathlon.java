@@ -17,17 +17,18 @@ public class Decathlon {
     }
 
     public static List<Event> createEventsList(){
+        int id = 0;
         List<Event> result = new ArrayList<>();
-        Collections.addAll(result, EventFactory.createEvent("100 m"),
-                EventFactory.createEvent("Long jump"),
-                EventFactory.createEvent("Shot put"),
-                EventFactory.createEvent("High jump"),
-                EventFactory.createEvent("400 m"),
-                EventFactory.createEvent("110 m hurdles"),
-                EventFactory.createEvent("Discus throw"),
-                EventFactory.createEvent("Pole vault"),
-                EventFactory.createEvent("Javelin throw"),
-                EventFactory.createEvent("1500 m"));
+        Collections.addAll(result, EventFactory.createEvent(id++,"100 m"),
+                EventFactory.createEvent(id++,"Long jump"),
+                EventFactory.createEvent(id++,"Shot put"),
+                EventFactory.createEvent(id++,"High jump"),
+                EventFactory.createEvent(id++,"400 m"),
+                EventFactory.createEvent(id++,"110 m hurdles"),
+                EventFactory.createEvent(id++,"Discus throw"),
+                EventFactory.createEvent(id++,"Pole vault"),
+                EventFactory.createEvent(id++,"Javelin throw"),
+                EventFactory.createEvent(id,"1500 m"));
         return result;
     }
 }

@@ -8,6 +8,7 @@ import com.event.TrackEvent;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -37,9 +38,13 @@ public class Main {
             Double[] allPerformancesByAthlete = new Double[line.length - 1];
             for (int j = 1; j < line.length; j++) {
                 if (j == line.length - 1) {
-                    LocalTime time = LocalTime.parse(line[j].trim(), DateTimeFormatter.ISO_LOCAL_TIME);
-                } else
-                allPerformancesByAthlete[j - 1] = Double.valueOf(line[j]);
+                    String[] time = line[j].split("[:. ]");
+                    LocalTime localTime = LocalTime.of(0, Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2]));
+                    allPerformancesByAthlete[j - 1] = (double)localTime.toNanoOfDay();
+                    System.out.println(localTime.getSecond());
+                } else {
+                    allPerformancesByAthlete[j - 1] = Double.valueOf(line[j]);
+                }
             }
             competitionResults.put(athlete, allPerformancesByAthlete);
         }

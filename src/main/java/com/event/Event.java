@@ -19,7 +19,7 @@ package com.event;
         return name;
     }
 
-    private class PointSystem {
+    protected class PointSystem {
         private double params[];
 
         private PointSystem(){
@@ -27,7 +27,7 @@ package com.event;
 
         public void initialize(){
             switch (name) {
-                case "100m":
+                case "100 m":
                     params = new double[]{25.4347, 18, 1.81};
                     break;
                 case "400 m":
@@ -60,14 +60,14 @@ package com.event;
             }
         }
 
-        public double calculatePoints(Event event){
+        public double calculatePoints(){
             double result = 0;
             double A = params[0];
             double B = params[1];
             double C = params[2];
 
-            if(event instanceof FieldEvent) {
-                result = A;
+            if(this instanceof TrackEvent.PointSystem) {
+
             }
             return 0;
         }

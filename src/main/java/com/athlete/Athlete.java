@@ -4,6 +4,10 @@ public class Athlete {
     private String name;
     private int totalScore;
 
+    public Athlete(String name){
+        this.name = name;
+    }
+
     public String getName(){
         return name;
     }
@@ -14,5 +18,9 @@ public class Athlete {
 
     public int getTotalScore(){
         return totalScore;
+    }
+
+    public void setTotalScore(int totalScore){
+        this.totalScore = totalScore;
     }
 }

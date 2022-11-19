@@ -1,7 +1,7 @@
 package com.event;
 
 public class TrackEvent extends Event {
-    public TrackEvent(String name){
-        super(name);
+    public TrackEvent(int id, String name){
+        super(id, name);
     }
 }

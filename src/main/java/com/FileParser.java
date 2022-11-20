@@ -1,27 +1,16 @@
 package com;
 
 import com.athlete.Athlete;
-import com.event.Event;
-import com.event.EventFactory;
-import com.event.FieldEvent;
-import com.event.TrackEvent;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import java.io.*;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class Main {
-    public static void main(String[] args){
-        //TODO: добавить возможность читать из файла который лежит в папке с проектом
-        Map<Athlete, Double[]> competitionResults = getCompetitionResults( "E:\\Java\\results.csv");
-    }
-
+public class FileParser {
     // обработка содержимого файла
-    public static Map<Athlete, Double[]> getCompetitionResults(String path){
+    public static Map<Athlete, Double[]> getCompetitionResults(String path) {
         String allCompetitionResultsFromFile = readFile(path);
         String[] competitionResultsLineByLine = allCompetitionResultsFromFile.split("\n");
         Map<Athlete, Double[]> competitionResults = new HashMap<>();
@@ -32,14 +21,14 @@ public class Main {
             Athlete athlete = new Athlete(athleteName);
             Double[] allPerformancesByAthlete = new Double[line.length - 1];
             for (int j = 1; j < line.length; j++) {
-                addPerformances(line[j], j == line.length - 1);
+                allPerformancesByAthlete[j - 1] = addPerformances(line[j], j == line.length - 1);
             }
             competitionResults.put(athlete, allPerformancesByAthlete);
         }
         return competitionResults;
     }
 
-    private static Double addPerformances(String line, boolean isLastElement) {
+    private static Double addPerformances(String line, boolean isLastElement) { // addPerformances это уместное название метода?
         if (isLastElement) {
             String[] time = line.split("[:. ]");
             int minutes = Integer.parseInt(time[0]);
@@ -47,16 +36,16 @@ public class Main {
             int nanoSeconds = Integer.parseInt(time[2]);
             LocalTime localTime = LocalTime.of
                     (0, minutes, seconds, nanoSeconds);
-            return (double)localTime.toNanoOfDay();
+            return (double) localTime.toNanoOfDay();
         } else {
             return Double.valueOf(line);
         }
     }
 
-    public static String readFile(String path){
+    public static String readFile(String path) {
         StringBuilder result = new StringBuilder();
-        try(BufferedReader reader = new BufferedReader(new FileReader(path))) {
-            while(reader.ready()) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            while (reader.ready()) {
                 String line = reader.readLine();
                 result.append(line).append("\n");
             }
@@ -64,5 +53,18 @@ public class Main {
             e.printStackTrace();
         }
         return result.toString();
+    }
+
+    public static void saveDataToFile(File file) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(ScoreTable.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            ScoreTable scoreTable = ScoreTable.getInstance();
+            marshaller.marshal(scoreTable, file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

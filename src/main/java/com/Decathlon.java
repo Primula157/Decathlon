@@ -51,7 +51,7 @@ public class Decathlon {
                 Event event = events.get(i);
                 if(event instanceof OneThousandFiveHundredMetres) {
                     LocalTime localTime = LocalTime.ofNanoOfDay(competitionsResults[i].longValue());
-                    performances.put(event,localTime.format(DateTimeFormatter.ofPattern("m:ss.SS")));
+                    performances.put(event,localTime.format(DateTimeFormatter.ISO_LOCAL_TIME));
                 } else {
                     performances.put(event, String.valueOf(competitionsResults[i]));
                 }

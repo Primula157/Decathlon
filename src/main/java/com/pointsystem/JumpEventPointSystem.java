@@ -11,7 +11,7 @@ public class JumpEventPointSystem extends PointSystem {
         double B = params[1];
         double C = params[2];
 
-        result = Math.abs(A * Math.pow((B - (performanceByTheAthlete * 100)), C));
+        result = Math.abs(A * Math.pow(((performanceByTheAthlete * 100) - B), C));
 
         return (int) result;
     }

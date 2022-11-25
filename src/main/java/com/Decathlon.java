@@ -4,12 +4,11 @@ import com.athlete.Athlete;
 import com.event.Event;
 import com.event.EventFactory;
 import com.event.OneThousandFiveHundredMetres;
+import com.event.TrackEvent;
 
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
 
 public class Decathlon {
@@ -49,9 +48,11 @@ public class Decathlon {
             int totalScore = 0;
             for (int i = 0; i < competitionsResults.length; i++) {
                 Event event = events.get(i);
-                if(event instanceof OneThousandFiveHundredMetres) {
-                    LocalTime localTime = LocalTime.ofNanoOfDay(competitionsResults[i].longValue());
-                    performances.put(event,localTime.format(DateTimeFormatter.ISO_LOCAL_TIME));
+                if (event instanceof TrackEvent) {
+                    LocalTime localTime = LocalTime.ofSecondOfDay(competitionsResults[i].longValue());
+                    //int miliseconds = competitionsResults[i];
+                    //localTime.plusNanos();
+                    performances.put(event, localTime.format(DateTimeFormatter.ISO_LOCAL_TIME));
                 } else {
                     performances.put(event, String.valueOf(competitionsResults[i]));
                 }

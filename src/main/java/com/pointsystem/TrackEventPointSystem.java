@@ -1,5 +1,7 @@
 package com.pointsystem;
 
+import java.time.LocalTime;
+
 public class TrackEventPointSystem extends PointSystem {
     public TrackEventPointSystem(double[] params) {
         super(params);

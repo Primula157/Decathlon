@@ -1,6 +1,8 @@
 package com;
 
 import com.athlete.Athlete;
+import com.event.Event;
+import com.event.TrackEvent;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -20,26 +22,39 @@ public class FileParser {
             String athleteName = line[0];
             Athlete athlete = new Athlete(athleteName);
             Double[] allPerformancesByAthlete = new Double[line.length - 1];
+            List<Event> events = Decathlon.createEventsList();
             for (int j = 1; j < line.length; j++) {
-                allPerformancesByAthlete[j - 1] = addPerformances(line[j], j == line.length - 1);
+                allPerformancesByAthlete[j - 1] = addPerformances(line[j], events.get(j - 1) instanceof TrackEvent);
             }
             competitionResults.put(athlete, allPerformancesByAthlete);
         }
         return competitionResults;
     }
 
-    private static Double addPerformances(String line, boolean isLastElement) { // addPerformances это уместное название метода?
-        if (isLastElement) {
-            String[] time = line.split("[:. ]");
-            int minutes = Integer.parseInt(time[0]);
-            int seconds = Integer.parseInt(time[1]);
-            int nanoSeconds = Integer.parseInt(time[2]);
-            LocalTime localTime = LocalTime.of
-                    (0, minutes, seconds, nanoSeconds);
-            return (double) localTime.toNanoOfDay();
-        } else {
-            return Double.valueOf(line);
+    private static Double addPerformances(String performanceByTheAthlete, boolean isTrackEvent) { // addPerformances это уместное название метода?
+        Double result = 0d;
+
+        try {
+            result = Double.parseDouble(performanceByTheAthlete);
+        } catch (NumberFormatException e) {
+            if (isTrackEvent) {
+                result = getSeconds(performanceByTheAthlete);
+            } else {
+                e.printStackTrace();
+            }
         }
+
+        return result;
+    }
+
+    private static Double getSeconds(String performanceByTheAthlete) {
+        String[] time = performanceByTheAthlete.split("[:. ]");
+        int nanoSeconds = Integer.parseInt(time[time.length - 1]);
+        int seconds = time.length - 2 >= 0 ? Integer.parseInt(time[time.length - 2]) : 0;
+        int minutes = time.length - 3 >= 0 ? Integer.parseInt(time[time.length - 3]) : 0;
+        LocalTime localTime = LocalTime.of
+                (0, minutes, seconds, nanoSeconds);
+        return (double) localTime.toSecondOfDay() + (localTime.getNano() * 0.01);
     }
 
     public static String readFile(String path) {

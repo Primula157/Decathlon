@@ -3,27 +3,35 @@ package com;
 import com.athlete.Athlete;
 import com.event.Event;
 import com.event.EventFactory;
-import com.event.OneThousandFiveHundredMetres;
-import com.event.TrackEvent;
-
-import java.io.File;
+import com.pointsystem.Unit;
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Decathlon {
+
     private static List<Event> events;
-    private static Map<Athlete, Double[]> performancesByTheAthletes;
-    private static ScoreTable scoreTable;
+    private Map<Athlete, Double[]> performancesByTheAthletes;
+    private ScoreTable scoreTable;
+
+    public static List<Event> getEvents() {
+        return events;
+    }
+
+    public Map<Athlete, Double[]> getPerformancesByTheAthletes() {
+        return performancesByTheAthletes;
+    }
+
+    public ScoreTable getScoreTable() {
+        return scoreTable;
+    }
 
     static {
         events = createEventsList();
     }
 
-    private Decathlon() {
-    }
-
-    public static List<Event> createEventsList() {
+    private static List<Event> createEventsList() {
         List<Event> result = new ArrayList<>();
         Collections.addAll(result, EventFactory.createEvent("100 m"),
                 EventFactory.createEvent("Long jump"),
@@ -38,41 +46,56 @@ public class Decathlon {
         return result;
     }
 
-    public static ScoreTable loadScoreTable() {
-        ScoreTable scoreTable = ScoreTable.getInstance();
+    private ScoreTable loadScoreTable() {
+        this.scoreTable = new ScoreTable();
 
         for (Map.Entry<Athlete, Double[]> performanceByTheAthlete : performancesByTheAthletes.entrySet()) {
             Athlete athlete = performanceByTheAthlete.getKey();
             Double[] competitionsResults = performanceByTheAthlete.getValue();
             Map<Event, String> performances = new HashMap<>();
-            int totalScore = 0;
-            for (int i = 0; i < competitionsResults.length; i++) {
-                Event event = events.get(i);
-                if (event instanceof TrackEvent) {
-                    LocalTime localTime = LocalTime.ofSecondOfDay(competitionsResults[i].longValue());
-                    //int miliseconds = competitionsResults[i];
-                    //localTime.plusNanos();
-                    performances.put(event, localTime.format(DateTimeFormatter.ISO_LOCAL_TIME));
-                } else {
-                    performances.put(event, String.valueOf(competitionsResults[i]));
-                }
-                totalScore += event.getPointSystem().calculatePoints(competitionsResults[i]);
-            }
+            int totalScore = loadPerformancesAndGetTotalScore(competitionsResults, performances);
             scoreTable.add(athlete, performances, totalScore);
         }
 
         return scoreTable;
     }
 
-    public static void main(String[] args) {
-        String inputFileName = "results.csv";
-        String path = System.getProperty("user.dir");
-        performancesByTheAthletes = FileParser.getCompetitionResults(path + "\\" + inputFileName);
+    private int loadPerformancesAndGetTotalScore(Double[] competitionsResults, Map<Event, String> performances) {
+        int totalScore = 0;
+
+        for (int i = 0; i < competitionsResults.length; i++) {
+            Event event = events.get(i);
+            if (event.getPointSystem().getUnit() == Unit.MINUTES_AND_SECONDS) {
+                LocalTime localTime = LocalTime.ofSecondOfDay(competitionsResults[i].longValue());
+                int minutes = localTime.getMinute();
+                int seconds = localTime.getSecond();
+                int milliseconds = Integer.parseInt(String.valueOf(competitionsResults[i]).split("[.,]")[1]);
+                String time = String.format("%d:%02d.%02d", minutes, seconds, milliseconds);
+                performances.put(event, time);
+            } else {
+                performances.put(event, String.format(Locale.ENGLISH, "%.2f", competitionsResults[i]));
+            }
+            totalScore += event.getPointSystem().calculatePoints(competitionsResults[i]);
+        }
+        return totalScore;
+    }
+
+    public void calculateTheResultsOfCompetition(FileParser fileParser) throws IOException, JAXBException {
+        performancesByTheAthletes = fileParser.getCompetitionResults();
         scoreTable = loadScoreTable();
         scoreTable.sort();
+        fileParser.saveDataToFile(scoreTable);
+    }
 
+    public static void main(String[] args) {
+        String inputFileName = "results.csv";
         String outputFileName = "data.xml";
-        File file = new File(path + "\\" + outputFileName);
-        FileParser.saveDataToFile(file);
+        Decathlon decathlon = new Decathlon();
+
+        try (FileParser fileParser = new FileParser(inputFileName, outputFileName)) {
+            decathlon.calculateTheResultsOfCompetition(fileParser);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

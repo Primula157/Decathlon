@@ -27,4 +27,15 @@ public abstract class Event {
     public void setPointSystem(PointSystem pointSystem) {
         this.pointSystem = pointSystem;
     }
+
+    public int hashCode() {
+        return id;
+    }
+
+    public boolean equals(Object event) {
+        if (event instanceof Event) {
+            return this.id == ((Event) event).id;
+        }
+        return false;
+    }
 }

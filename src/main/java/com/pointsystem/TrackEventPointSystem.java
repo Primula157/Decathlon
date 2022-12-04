@@ -1,10 +1,8 @@
 package com.pointsystem;
 
-import java.time.LocalTime;
-
 public class TrackEventPointSystem extends PointSystem {
-    public TrackEventPointSystem(double[] params) {
-        super(params);
+    public TrackEventPointSystem(double[] params, Unit unit) {
+        super(params, unit);
     }
 
     public int calculatePoints(double performanceByTheAthlete) {

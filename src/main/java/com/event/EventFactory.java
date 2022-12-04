@@ -7,7 +7,7 @@ public class EventFactory {
     public static Event createEvent(String name) {
         Event event = null;
 
-        switch (name) {
+        switch (name.toLowerCase()) {
             case "100 m":
                 event = new HundredMetres(name);
                 break;
@@ -20,22 +20,22 @@ public class EventFactory {
             case "1500 m":
                 event = new OneThousandFiveHundredMetres(name);
                 break;
-            case "Long jump":
+            case "long jump":
                 event = new LongJump(name);
                 break;
-            case "Shot put":
+            case "shot put":
                 event = new ShotPut(name);
                 break;
-            case "High jump":
+            case "high jump":
                 event = new HighJump(name);
                 break;
-            case "Discus throw":
+            case "discus throw":
                 event = new DiscusThrow(name);
                 break;
-            case "Pole vault":
+            case "pole vault":
                 event = new PoleVault(name);
                 break;
-            case "Javelin throw":
+            case "javelin throw":
                 event = new JavelinThrow(name);
                 break;
         }

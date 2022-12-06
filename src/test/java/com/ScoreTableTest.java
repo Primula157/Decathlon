@@ -10,14 +10,13 @@ import java.util.List;
 
 
 class ScoreTableTest {
-    private static String inputFileName = "test_results.csv";
-    private static String outputFileName = "actual_test_data.xml";
-    private static Decathlon decathlon = new Decathlon();
-    private static FileParser fileParser;
+    private static final Decathlon decathlon = new Decathlon();
 
     @BeforeAll
     public static void initialize() throws IOException, JAXBException {
-        fileParser = new FileParser(inputFileName, outputFileName);
+        String inputFileName = "test_results.csv";
+        String outputFileName = "\\src\\main\\resources\\" + "actual_test_data.xml";
+        FileParser fileParser = new FileParser(inputFileName, outputFileName);
         decathlon.calculateTheResultsOfCompetition(fileParser);
     }
 

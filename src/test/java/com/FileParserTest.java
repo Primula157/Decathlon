@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileParserTest {
     private String inputFileName = "test_results.csv";
-    private String outputFileName = "actual_test_data.xml";
+    private String outputFileName = "src\\main\\resources\\" + "actual_test_data.xml";
     private Decathlon decathlon = new Decathlon();
     private FileParser fileParser;
 
@@ -89,8 +89,8 @@ class FileParserTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String expectedFilePath = System.getProperty("user.dir") + "\\" + "expected_test_data.xml";
-        try (InputStreamReader actualFileReader = new InputStreamReader(new FileInputStream(fileParser.getOutputFilePath()));
+        String expectedFilePath = System.getProperty("user.dir") + "\\src\\main\\resources\\" + "expected_test_data.xml";
+        try (InputStreamReader actualFileReader = new InputStreamReader(new FileInputStream(outputFileName));
         InputStreamReader excpectedFileReader = new InputStreamReader(new FileInputStream(expectedFilePath))) {
             while(actualFileReader.ready()) {
                 assertEquals(actualFileReader.read(), excpectedFileReader.read());

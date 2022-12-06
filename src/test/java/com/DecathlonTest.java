@@ -13,15 +13,14 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DecathlonTest {
-    private static String inputFileName = "test_results.csv";
-    private static String outputFileName = "actual_test_data.xml";
-    private static FileParser fileParser;
-    private static Decathlon decathlon = new Decathlon();
+    private static final Decathlon decathlon = new Decathlon();
 
     @BeforeAll
     static void initialize(){
         try {
-            fileParser = new FileParser(inputFileName, outputFileName);
+            String inputFileName = "test_results.csv";
+            String outputFileName = "\\src\\main\\resources\\" + "actual_test_data.xml";
+            FileParser fileParser = new FileParser(inputFileName, outputFileName);
             decathlon.calculateTheResultsOfCompetition(fileParser);
         } catch (Exception e) {
             e.printStackTrace();

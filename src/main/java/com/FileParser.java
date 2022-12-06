@@ -6,34 +6,23 @@ import com.event.TrackEvent;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.*;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.File;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 import java.time.LocalTime;
-import java.util.*;
+
 
 public class FileParser implements Closeable {
-    private BufferedReader bufferedReader;
-    private String inputFilePath;
-    private String outputFilePath;
-
-
-    public String getInputFilePath() {
-        return inputFilePath;
-    }
-
-    public void setInputFilePath(String inputFilePath) {
-        this.inputFilePath = inputFilePath;
-    }
-
-    public String getOutputFilePath() {
-        return outputFilePath;
-    }
-
-    public void setOutputFilePath(String outputFilePath) {
-        this.outputFilePath = outputFilePath;
-    }
+    private final BufferedReader bufferedReader;
+    private final String outputFilePath;
 
     public FileParser(String inputFileName, String outputFileName) throws IOException {
-        inputFilePath = System.getProperty("user.dir") + "\\" + inputFileName;
+        String inputFilePath = System.getProperty("user.dir") + "\\src\\main\\resources\\" + inputFileName;
         outputFilePath = System.getProperty("user.dir") + "\\" + outputFileName;
         bufferedReader = new BufferedReader(new FileReader(inputFilePath));
     }
@@ -44,8 +33,8 @@ public class FileParser implements Closeable {
         String[] competitionResultsLineByLine = allCompetitionResultsFromFile.split("\n");
         Map<Athlete, Double[]> competitionResults = new HashMap<>();
 
-        for (int i = 0; i < competitionResultsLineByLine.length; i++) {
-            String[] line = competitionResultsLineByLine[i].split(";");
+        for (String s : competitionResultsLineByLine) {
+            String[] line = s.split(";");
             String athleteName = line[0];
             Athlete athlete = new Athlete(athleteName);
             Double[] allPerformancesByAthlete = new Double[line.length - 1];
@@ -60,7 +49,7 @@ public class FileParser implements Closeable {
 
     // проверка корректности данных из файла и преобразование минут в секунды
     private Double getPerformanceByTheAthlete(String performanceByTheAthlete, boolean isTrackEvent) {
-        Double result = 0d;
+        double result = 0d;
 
         try {
             result = Double.parseDouble(performanceByTheAthlete);

@@ -4,14 +4,19 @@ import com.athlete.Athlete;
 import com.event.Event;
 import com.event.EventFactory;
 import com.pointsystem.Unit;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Locale;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.time.LocalTime;
-import java.util.*;
 
 public class Decathlon {
 
-    private static List<Event> events;
+    private static final List<Event> events;
     private Map<Athlete, Double[]> performancesByTheAthletes;
     private ScoreTable scoreTable;
 
@@ -85,17 +90,5 @@ public class Decathlon {
         scoreTable = loadScoreTable();
         scoreTable.sort();
         fileParser.saveDataToFile(scoreTable);
-    }
-
-    public static void main(String[] args) {
-        String inputFileName = "results.csv";
-        String outputFileName = "data.xml";
-        Decathlon decathlon = new Decathlon();
-
-        try (FileParser fileParser = new FileParser(inputFileName, outputFileName)) {
-            decathlon.calculateTheResultsOfCompetition(fileParser);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

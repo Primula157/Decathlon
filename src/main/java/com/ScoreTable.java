@@ -2,16 +2,19 @@ package com;
 
 import com.athlete.Athlete;
 import com.event.Event;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Collections;
+import java.util.Comparator;
 
 @XmlRootElement(name = "tableScore")
 public class ScoreTable {
 
     @XmlElement(name = "row")
-    private List<Row> rows = new ArrayList<>();
+    private final List<Row> rows = new ArrayList<>();
     public List<Row> getRows() {
         return rows;
     }
@@ -46,13 +49,13 @@ public class ScoreTable {
         private String place;
 
         @XmlElement(name = "athlete")
-        private Athlete athlete;
+        private final Athlete athlete;
 
         @XmlElement(name = "performances")
-        private Map<Event, String> performances;
+        private final Map<Event, String> performances;
 
         @XmlElement(name = "totalScore")
-        private int totalScore;
+        private final int totalScore;
 
         public String getPlace() {
             return place;

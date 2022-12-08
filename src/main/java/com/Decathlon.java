@@ -2,7 +2,7 @@ package com;
 
 import com.athlete.Athlete;
 import com.event.Event;
-import com.event.EventFactory;
+import com.event.factory.EventFactory;
 import com.pointsystem.Unit;
 import java.util.List;
 import java.util.ArrayList;

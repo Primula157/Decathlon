@@ -1,4 +1,6 @@
-package com.event;
+package com.event.factory;
+
+import com.event.*;
 
 public class EventFactory {
     private EventFactory() {
@@ -38,6 +40,8 @@ public class EventFactory {
             case "javelin throw":
                 event = new JavelinThrow(name);
                 break;
+            default:
+                throw new RuntimeException("Illegal event name");
         }
 
         return event;

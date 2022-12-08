@@ -2,7 +2,7 @@ package com;
 
 import com.athlete.Athlete;
 import com.event.Event;
-import com.event.EventFactory;
+import com.event.factory.EventFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

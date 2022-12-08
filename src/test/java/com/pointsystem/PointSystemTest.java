@@ -1,7 +1,7 @@
 package com.pointsystem;
 
 import com.event.Event;
-import com.event.EventFactory;
+import com.event.factory.EventFactory;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

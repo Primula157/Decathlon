@@ -3,6 +3,7 @@ package com;
 import com.athlete.Athlete;
 import com.event.Event;
 import com.event.TrackEvent;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -40,7 +41,7 @@ public class FileParser implements Closeable {
             Double[] allPerformancesByAthlete = new Double[line.length - 1];
             List<Event> events = Decathlon.getEvents();
             for (int j = 1; j < line.length; j++) {
-                allPerformancesByAthlete[j - 1] = getPerformanceByTheAthlete(line[j], events.get(j - 1) instanceof TrackEvent);
+                allPerformancesByAthlete[j - 1] = getPerformanceByTheAthlete(line[j]);
             }
             competitionResults.put(athlete, allPerformancesByAthlete);
         }
@@ -48,41 +49,38 @@ public class FileParser implements Closeable {
     }
 
     // проверка корректности данных из файла и преобразование минут в секунды
-    private Double getPerformanceByTheAthlete(String performanceByTheAthlete, boolean isTrackEvent) {
+    private Double getPerformanceByTheAthlete(String performanceByTheAthlete) {
         double result = 0d;
 
         try {
-            result = Double.parseDouble(performanceByTheAthlete);
-            if (result < 0) return 0d;
-        } catch (NumberFormatException e) {
-            if (isTrackEvent) {
+            if (performanceByTheAthlete.contains(":")) {
                 result = getSeconds(performanceByTheAthlete);
             } else {
-                e.printStackTrace();
+
+                result = Double.parseDouble(performanceByTheAthlete);
+                if (result < 0) return 0d;
             }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
 
         return result;
     }
 
     // перевод минут в секунды
-    private Double getSeconds(String performanceByTheAthlete) {
+    private Double getSeconds(String performanceByTheAthlete) throws NumberFormatException {
         String[] time = performanceByTheAthlete.split("[:. ]");
         int nanoSeconds = 0;
         int seconds = 0;
         int minutes = 0;
 
-        try {
-            nanoSeconds = Integer.parseInt(time[time.length - 1]);
-            seconds = time.length - 2 >= 0 ? Integer.parseInt(time[time.length - 2]) : 0;
-            minutes = time.length - 3 >= 0 ? Integer.parseInt(time[time.length - 3]) : 0;
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
+        nanoSeconds = Integer.parseInt(time[time.length - 1]);
+        seconds = time.length - 2 >= 0 ? Integer.parseInt(time[time.length - 2]) : 0;
+        minutes = time.length - 3 >= 0 ? Integer.parseInt(time[time.length - 3]) : 0;
 
         LocalTime localTime = LocalTime.of
                 (0, minutes, seconds, nanoSeconds);
-        return (double) localTime.toSecondOfDay() + (localTime.getNano() * 0.01);
+        return localTime.toSecondOfDay() + (localTime.getNano() * 0.01);
     }
 
     private String readFile() throws IOException {

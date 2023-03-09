@@ -1,6 +1,8 @@
 package com;
 
-import com.athlete.Athlete;
+import com.decathlon.Decathlon;
+import com.decathlon.FileParser;
+import com.decathlon.athlete.Athlete;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +15,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileParserTest {
-    private String inputFileName = "test_results.csv";
-    private String outputFileName = "src\\main\\resources\\" + "actual_test_data.xml";
+    private String inputFileName = "src\\test\\resources\\" + "test_results.csv";
+    private String outputFileName = "src\\test\\resources\\" + "actual_test_data.xml";
     private Decathlon decathlon = new Decathlon();
     private FileParser fileParser;
 

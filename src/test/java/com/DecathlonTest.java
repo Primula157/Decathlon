@@ -1,8 +1,11 @@
 package com;
 
-import com.athlete.Athlete;
-import com.event.Event;
-import com.event.factory.EventFactory;
+import com.decathlon.Decathlon;
+import com.decathlon.FileParser;
+import com.decathlon.ScoreTable;
+import com.decathlon.athlete.Athlete;
+import com.decathlon.event.Event;
+import com.decathlon.event.factory.EventFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +22,7 @@ class DecathlonTest {
     static void initialize(){
         try {
             String inputFileName = "test_results.csv";
-            String outputFileName = "\\src\\main\\resources\\" + "actual_test_data.xml";
+            String outputFileName = "\\src\\test\\resources\\" + "actual_test_data.xml";
             FileParser fileParser = new FileParser(inputFileName, outputFileName);
             decathlon.calculateTheResultsOfCompetition(fileParser);
         } catch (Exception e) {

@@ -1,6 +1,9 @@
 package com;
 
-import com.athlete.Athlete;
+import com.decathlon.Decathlon;
+import com.decathlon.FileParser;
+import com.decathlon.ScoreTable;
+import com.decathlon.athlete.Athlete;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,14 +11,13 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.List;
 
-
 class ScoreTableTest {
     private static final Decathlon decathlon = new Decathlon();
 
     @BeforeAll
     public static void initialize() throws IOException, JAXBException {
-        String inputFileName = "test_results.csv";
-        String outputFileName = "\\src\\main\\resources\\" + "actual_test_data.xml";
+        String inputFileName = "\\src\\test\\resources\\" + "test_results.csv";
+        String outputFileName = "\\src\\test\\resources\\" + "actual_test_data.xml";
         FileParser fileParser = new FileParser(inputFileName, outputFileName);
         decathlon.calculateTheResultsOfCompetition(fileParser);
     }
